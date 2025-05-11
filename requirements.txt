@@ -1,1 +1,4 @@
-passlib
+passlib~=1.7.4
+pip~=25.0.1
+fastapi~=0.115.12
+pydantic~=2.10.6

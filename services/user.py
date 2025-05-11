@@ -1,5 +1,8 @@
+# built-in libraries
 from uuid import UUID
+# Installed libraries
 from passlib.hash import bcrypt
+# code libraries/folders
 from database import users
 from schemas.user import User, UserCreate, UserUpdate, ChangePassword, UserLogin
 
