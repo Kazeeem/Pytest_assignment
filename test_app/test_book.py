@@ -80,6 +80,7 @@ def test_update_book():
     assert update_data["message"] == "Book updated successfully"
     assert update_data["data"]["title"] == "Python is interesting than PHP"
 
+
 def test_update_book_failed():
     book_id = str(uuid.uuid4())
 
@@ -92,3 +93,30 @@ def test_update_book_failed():
     update_data = update_response.json()
     assert update_response.status_code == 404
     assert update_data['detail'] == f"Book with id: {book_id} not found"
+
+
+def test_delete_book():
+    payload = {
+        "title": "Kaz the bad guy 2",
+        "author": "Kazeem Asifat",
+        "year": 2026,
+        "pages": 5000,
+        "language": "English"
+    }
+
+    response = client.post("/books", json=payload)
+    added_book_data = response.json()
+    book_id = added_book_data['data']['id']
+
+    update_response = client.delete(f"/books/{book_id}")
+    update_data = update_response.json()
+    assert update_data["message"] == "Book deleted successfully"
+
+
+def test_book_delete_failed():
+    book_id = str(uuid.uuid4())
+
+    delete_response = client.delete(f"/books/{book_id}")
+    response = delete_response.json()
+    assert delete_response.status_code == 404
+    assert response['detail'] == f"Book with id: {book_id} not found"
