@@ -1,3 +1,9 @@
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+# The 3 lines of code above helps my terminal to locate the main.py file by adjusting the import path so that test_book.py
+# can successfully import my app from the main.py file.
+
 from fastapi.testclient import TestClient
 from main import app
 from schemas.book import BookCreate
