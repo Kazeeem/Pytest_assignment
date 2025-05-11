@@ -7,6 +7,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from fastapi.testclient import TestClient
 from main import app
 from schemas.book import BookCreate
+import uuid
 
 client = TestClient(app)
 
@@ -54,3 +55,40 @@ def test_get_book_by_id_not_found():
     get_book_data = get_response.json()
     assert get_response.status_code == 404
     assert get_book_data['detail'] == "book not found."
+
+
+def test_update_book():
+    payload = {
+        "title": "Kaz the bad guy",
+        "author": "Kazeem Asifat",
+        "year": 2025,
+        "pages": 5000,
+        "language": "English"
+    }
+
+    update_payload = {
+        "title": "Python is interesting than PHP",
+        "author": "Kaz the bad guy"
+    }
+
+    response = client.post("/books", json=payload)
+    added_book_data = response.json()
+    book_id = added_book_data['data']['id']
+
+    update_response = client.put(f"/books/{book_id}", json=update_payload)
+    update_data = update_response.json()
+    assert update_data["message"] == "Book updated successfully"
+    assert update_data["data"]["title"] == "Python is interesting than PHP"
+
+def test_update_book_failed():
+    book_id = str(uuid.uuid4())
+
+    update_payload = {
+        "title": "Python is interesting than PHP",
+        "author": "Kaz the bad guy"
+    }
+
+    update_response = client.put(f"/books/{book_id}", json=update_payload)
+    update_data = update_response.json()
+    assert update_response.status_code == 404
+    assert update_data['detail'] == f"Book with id: {book_id} not found"
